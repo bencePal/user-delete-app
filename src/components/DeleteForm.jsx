@@ -5,7 +5,7 @@ class DeleteForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: 'asdasd@asd',
+            email: '',
             placeholder: 'Email address',
             loading: false,
             statusOne: {
