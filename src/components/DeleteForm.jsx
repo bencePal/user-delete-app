@@ -102,7 +102,8 @@ class DeleteForm extends React.Component {
                                onChange={this.handleChange}
                         />
                     </div>
-                    <input type="submit" value="Submit" className={'btn btn-primary'} />
+                    <input disabled={!this.state.email}
+                           type="submit" value="Submit" className={'btn btn-primary'} />
                 </form>
                 <div className={'footer clearfix'}>
                     {this.state.loading ? <div className={'loader'} /> : ''}
