@@ -4,22 +4,17 @@ import axios from 'axios';
 class DeleteForm extends React.Component {
     constructor(props) {
         super(props);
+        const defaultStatus = {
+            visible: false,
+            text: '',
+        };
         this.state = {
             email: '',
             placeholder: 'Email address',
             loading: false,
-            statusOne: {
-                visible: false,
-                text: '',
-            },
-            statusTwo: {
-                visible: false,
-                text: '',
-            },
-            statusThree: {
-                visible: false,
-                text: '',
-            },
+            statusOne: defaultStatus,
+            statusTwo: defaultStatus,
+            statusThree: defaultStatus,
             progressSuccessful: true
         };
         this.defaultState = this.state;
