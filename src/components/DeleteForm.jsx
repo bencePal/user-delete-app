@@ -4,6 +4,9 @@ import axios from 'axios';
 class DeleteForm extends React.Component {
     constructor(props) {
         super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleReset = this.handleReset.bind(this);
         const defaultStatus = {
             visible: false,
             text: '',
@@ -20,11 +23,12 @@ class DeleteForm extends React.Component {
         this.defaultState = this.state;
     }
 
-    handleChange = event => {
-        this.setState({email: event.target.value});
-    };
+    handleChange(event) {
+        const email = event.target.value;
+        this.setState({ email });
+    }
 
-    handleSubmit = event => {
+    handleSubmit(event) {
         event.preventDefault();
         const user = {
             name: 'random',
@@ -34,48 +38,48 @@ class DeleteForm extends React.Component {
             await this.handleStage(this.stageOne(user), 'One');
             if (this.state.progressSuccessful) await this.handleStage(this.stageTwo(), 'Two');
             if (this.state.progressSuccessful) await this.handleStage(this.stageThree(), 'Three');
-            this.setState({loading: false})
+            this.setState({ loading: false });
         })();
     };
 
     handleStage = async (stage, statusNumber) => {
         try {
             console.log(await stage);
-            this.setState({[`status${statusNumber}`] : {
+            this.setState({ [`status${statusNumber}`] : {
                 visible: true,
                 text: <div className={'stage text-success clearfix'}>
                         <span className={'stage__text'}>Stage {statusNumber}</span>
                         <span className={'success-icon'}/>
                     </div>,
-            }})
+            } })
         } catch (e) {
             console.log(e);
-            this.setState({[`status${statusNumber}`] : {
+            this.setState({ [`status${statusNumber}`] : {
                 visible: true,
                 text: <div className={'stage text-danger clearfix'}>
                         <span className={'stage__text'}>Stage {statusNumber}</span>
                         <span className={'danger-icon'}/>
                     </div>,
-            }, progressSuccessful: false})
+            }, progressSuccessful: false })
         }
     };
 
-    handleReset = () => {
+    handleReset() {
         this.setState(this.defaultState);
     };
 
     stageOne = async (user) => {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         return await axios.post(`https://jsonplaceholder.typicode.com/users`, { user });
     };
 
     stageTwo = async () => {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         return await axios.get(`http://slowwly.robertomurray.co.uk/delay/3400/url/https://jsonplaceholder.typicode.com/users2`);
     };
 
     stageThree = async () => {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         return await axios.get(`http://slowwly.robertomurray.co.uk/delay/1400/url/https://jsonplaceholder.typicode.com/users`);
     };
 
