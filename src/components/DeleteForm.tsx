@@ -57,7 +57,7 @@ const DeleteForm = () => {
         ...prevState,
         [`status${statusNumber}`]: {
           visible: true,
-          text: <LoaderItem type={'success'} statusNumber={statusNumber} />
+          component: <LoaderItem type={'success'} statusNumber={statusNumber} />
         },
       }));
     } catch (e) {
@@ -66,7 +66,7 @@ const DeleteForm = () => {
         ...prevState,
         [`status${statusNumber}`]: {
           visible: true,
-          text: <LoaderItem type={'danger'} statusNumber={statusNumber} />
+          component: <LoaderItem type={'danger'} statusNumber={statusNumber} />
         },
         progressSuccessful: false,
       }));
