@@ -1,0 +1,87 @@
+.container {
+    .form-container {
+        margin-top: 140px;
+
+        .header {
+            &__title {
+                float: left;
+            }
+
+            &__reset-button {
+                float: right;
+                cursor: pointer;
+            }
+        }
+
+        .footer {
+            margin: 15px 10px 0 10px;
+
+            &__stage-container {
+                float: left;
+
+                .stage {
+                    position: relative;
+                    font-size: 19px;
+                    margin: 5px 0;
+                    display: block;
+                    font-weight: 600;
+
+                    &__text {
+                        float: left;
+                        text-transform: lowercase;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* utils */
+
+.danger-icon {
+    color: #dc3545;
+    font: 25px/100% arial, sans-serif;
+    float: left;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    margin: 3px 5px;
+}
+
+.danger-icon:after {
+    content: '✖'; /* UTF-8 symbol */
+}
+
+.success-icon:after {
+    float: left;
+    content: '';
+    display: block;
+    width: 10px;
+    height: 17px;
+    border: solid #28a745;
+    border-width: 0 5px 5px 0;
+    transform: rotate(45deg);
+    margin: 5px 0 0 14px;
+}
+
+.loader {
+    margin-top: 5px;
+    float: right;
+    border: 6px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 6px solid #f26522;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
