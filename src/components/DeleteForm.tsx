@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import initialState from "../states/initial-state";
 
 const DeleteForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [progressEnded, setProgressEnded] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [progressEnded, setProgressEnded] = useState<boolean>(false);
   const [
     {
       email,
@@ -17,7 +17,7 @@ const DeleteForm = () => {
     setState,
   ] = useState(initialState);
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const email = event.target.value;
     setState((prevState) => ({
       ...prevState,
@@ -25,12 +25,12 @@ const DeleteForm = () => {
     }));
   };
 
-  const handleReset = () => {
+  const handleReset = (): void => {
     setState({ ...initialState });
     setProgressEnded(!progressEnded);
   };
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     const user = {
       name: "random",
@@ -45,7 +45,7 @@ const DeleteForm = () => {
     })();
   };
 
-  const handleStage = async (stage: any, statusNumber: any) => {
+  const handleStage = async (stage: Promise<void>, statusNumber: string): Promise<void> => {
     try {
       console.log(await stage);
       setState((prevState) => ({
@@ -85,14 +85,14 @@ const DeleteForm = () => {
     });
   };
 
-  const stageTwo = async () => {
+  const stageTwo = async (): Promise<any> => {
     setLoading(true);
     return await axios.get(
       `https://deelay.me/2000/https://jsonplaceholder.typicode.com/users`
     );
   };
 
-  const stageThree = async () => {
+  const stageThree = async (): Promise<any> => {
     setLoading(true);
     return await axios.get(
       `https://deelay.me/3000/https://jsonplaceholder.typicode.com/users2`
