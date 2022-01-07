@@ -1,5 +1,5 @@
 type DefaultStatus = {
-  text: string,
+  component: string | React.FC,
   visible: boolean
 }
 

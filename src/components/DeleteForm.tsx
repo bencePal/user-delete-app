@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import initialState from "../states/initial-state";
+import LoaderItem from "./LoaderItem";
 
 const DeleteForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,9 +38,13 @@ const DeleteForm = () => {
       email: email,
     };
     (async () => {
-      await handleStage(stageOne(user), "One");
-      if (progressSuccessful) await handleStage(stageTwo(), "Two");
-      if (progressSuccessful) await handleStage(stageThree(), "Three");
+      await handleStage(handleAxios('https://jsonplaceholder.typicode.com/users', 'POST', user), "One");
+      if (progressSuccessful) {
+        await handleStage(handleAxios('https://deelay.me/2000/https://jsonplaceholder.typicode.com/users', 'GET'), "Two");
+      }
+      if (progressSuccessful) {
+        await handleStage(handleAxios('https://deelay.me/2000/https://jsonplaceholder.typicode.com/usersbad', 'GET'), "Three");
+      }
       setLoading(false);
       setProgressEnded(true);
     })();
@@ -52,12 +57,7 @@ const DeleteForm = () => {
         ...prevState,
         [`status${statusNumber}`]: {
           visible: true,
-          text: (
-            <div className={"stage text-success clearfix"}>
-              <span className={"stage__text"}>Stage {statusNumber}</span>
-              <span className={"success-icon"} />
-            </div>
-          ),
+          text: <LoaderItem type={'success'} statusNumber={statusNumber} />
         },
       }));
     } catch (e) {
@@ -66,38 +66,25 @@ const DeleteForm = () => {
         ...prevState,
         [`status${statusNumber}`]: {
           visible: true,
-          text: (
-            <div className={"stage text-danger clearfix"}>
-              <span className={"stage__text"}>Stage {statusNumber}</span>
-              <span className={"danger-icon"} />
-            </div>
-          ),
+          text: <LoaderItem type={'danger'} statusNumber={statusNumber} />
         },
         progressSuccessful: false,
       }));
     }
   };
 
-  const stageOne = async (user: any): Promise<any> => {
+  const handleAxios = async (url: string, type: string, user?: any): Promise<any> =>{
     setLoading(true);
-    return await axios.post(`https://jsonplaceholder.typicode.com/users`, {
-      user,
-    });
-  };
-
-  const stageTwo = async (): Promise<any> => {
-    setLoading(true);
-    return await axios.get(
-      `https://deelay.me/2000/https://jsonplaceholder.typicode.com/users`
-    );
-  };
-
-  const stageThree = async (): Promise<any> => {
-    setLoading(true);
-    return await axios.get(
-      `https://deelay.me/3000/https://jsonplaceholder.typicode.com/users2`
-    );
-  };
+    if (type === 'POST') {
+      return await axios.post(url, {
+        user,
+      });
+    } else {
+      return await axios.get(
+        url
+      );
+    }
+  }
 
   return (
     <div className={"form-container"}>
@@ -135,9 +122,9 @@ const DeleteForm = () => {
       <div className={"footer clearfix"}>
         {loading ? <div className={"loader"} /> : ""}
         <div className={"footer__stage-container"}>
-          {statusOne.visible ? statusOne.text : ""}
-          {statusTwo.visible ? statusTwo.text : ""}
-          {statusThree.visible ? statusThree.text : ""}
+          {statusOne.visible ? statusOne.component : ""}
+          {statusTwo.visible ? statusTwo.component : ""}
+          {statusThree.visible ? statusThree.component : ""}
         </div>
       </div>
     </div>
