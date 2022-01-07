@@ -1,19 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-
-const defaultStatus = {
-  text: "",
-  visible: false,
-};
-
-const initialState = {
-  email: "",
-  placeholder: "Email address",
-  statusOne: defaultStatus,
-  statusTwo: defaultStatus,
-  statusThree: defaultStatus,
-  progressSuccessful: true,
-};
+import initialState from "../states/initial-state";
 
 const DeleteForm = () => {
   const [loading, setLoading] = useState(false);
