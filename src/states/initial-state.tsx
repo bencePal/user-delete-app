@@ -1,17 +1,12 @@
-import { DefaultStatus, InitialState } from "../types/initial-types";
-
-const defaultStatus: DefaultStatus = {
-  component: '',
-  visible: false,
-};
+import { InitialState } from "../types/initial-types";
 
 const initialState: InitialState = {
   email: '',
   placeholder: 'Email address',
-  statusOne: defaultStatus,
-  statusTwo: defaultStatus,
-  statusThree: defaultStatus,
-  progressSuccessful: true,
+  numberOfRequests: 0,
+  progressEnded: false,
+  formSubmitted: false,
+  stageList: []
 };
 
 export default initialState;

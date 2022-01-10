@@ -1,22 +1,13 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import initialState from "../states/initial-state";
-import LoaderItem from "./LoaderItem";
+import StageItem from "./StageItem";
+import requestData from "../config";
 
 const DeleteForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [progressEnded, setProgressEnded] = useState<boolean>(false);
-  const [
-    {
-      email,
-      placeholder,
-      statusOne,
-      statusTwo,
-      statusThree,
-      progressSuccessful,
-    },
-    setState,
-  ] = useState(initialState);
+  const [{email, placeholder, numberOfRequests, formSubmitted, progressEnded, stageList}, setState] = useState(initialState);
+  const firstUpdate = useRef<boolean>(true);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const email = event.target.value;
@@ -28,63 +19,55 @@ const DeleteForm = () => {
 
   const handleReset = (): void => {
     setState({ ...initialState });
-    setProgressEnded(!progressEnded);
+    firstUpdate.current = true
   };
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    const user = {
-      name: "random",
-      email: email,
-    };
-    (async () => {
-      await handleStage(handleAxios('https://jsonplaceholder.typicode.com/users', 'POST', user), "One");
-      if (progressSuccessful) {
-        await handleStage(handleAxios('https://deelay.me/2000/https://jsonplaceholder.typicode.com/users', 'GET'), "Two");
-      }
-      if (progressSuccessful) {
-        await handleStage(handleAxios('https://deelay.me/2000/https://jsonplaceholder.typicode.com/usersbad', 'GET'), "Three");
-      }
-      setLoading(false);
-      setProgressEnded(true);
-    })();
+    setState((prevState) => ({...prevState, formSubmitted: true}));
   };
 
-  const handleStage = async (stage: Promise<void>, statusNumber: string): Promise<void> => {
-    try {
-      console.log(await stage);
-      setState((prevState) => ({
-        ...prevState,
-        [`status${statusNumber}`]: {
-          visible: true,
-          component: <LoaderItem type={'success'} statusNumber={statusNumber} />
-        },
-      }));
-    } catch (e) {
-      console.log(e);
-      setState((prevState) => ({
-        ...prevState,
-        [`status${statusNumber}`]: {
-          visible: true,
-          component: <LoaderItem type={'danger'} statusNumber={statusNumber} />
-        },
-        progressSuccessful: false,
-      }));
-    }
-  };
-
-  const handleAxios = async (url: string, type: string, user?: any): Promise<any> =>{
+  const handleAxios = async (url: string, type: string): Promise<any> =>{
     setLoading(true);
     if (type === 'POST') {
-      return await axios.post(url, {
-        user,
-      });
+      return await axios.post(url, {email});
     } else {
-      return await axios.get(
-        url
-      );
+      return await axios.get(url);
     }
   }
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    if (numberOfRequests < requestData.length) {
+      (async () => {
+        try {
+          const response = await handleAxios(requestData[numberOfRequests].url, requestData[numberOfRequests].method);
+          console.log(response)
+          setState((prevState) => ({
+            ...prevState,
+            numberOfRequests: numberOfRequests + 1,
+            stageList: [...stageList, <StageItem key={numberOfRequests} type={'success'} statusNumber={numberOfRequests} />]
+          }));
+        } catch (error) {
+          console.log(error)
+          setLoading(false);
+          setState((prevState) => ({
+            ...prevState, 
+            progressEnded: true,
+            stageList: [...stageList, <StageItem key={numberOfRequests} type={'danger'} statusNumber={numberOfRequests} />]
+          }));
+        }
+
+        if (numberOfRequests === requestData.length - 1) {
+          setLoading(false);
+          setState((prevState) => ({...prevState, progressEnded: true}));
+        }
+      })();
+    }
+  }, [numberOfRequests, formSubmitted])
 
   return (
     <div className={"form-container"}>
@@ -110,6 +93,7 @@ const DeleteForm = () => {
             value={email}
             name={"email"}
             onChange={handleChange}
+            disabled= {loading || progressEnded ? true : false}
           />
         </div>
         <input
@@ -122,9 +106,9 @@ const DeleteForm = () => {
       <div className={"footer clearfix"}>
         {loading ? <div className={"loader"} /> : ""}
         <div className={"footer__stage-container"}>
-          {statusOne.visible ? statusOne.component : ""}
-          {statusTwo.visible ? statusTwo.component : ""}
-          {statusThree.visible ? statusThree.component : ""}
+          {stageList.map((element: JSX.Element) => (
+            element
+          ))}
         </div>
       </div>
     </div>

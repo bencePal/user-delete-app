@@ -1,15 +1,10 @@
-type DefaultStatus = {
-  component: string | React.FC,
-  visible: boolean
-}
-
 type InitialState = {
   email: string,
   placeholder: string,
-  statusOne: DefaultStatus,
-  statusTwo: DefaultStatus,
-  statusThree: DefaultStatus,
-  progressSuccessful: boolean,
+  numberOfRequests: number,
+  progressEnded: boolean,
+  formSubmitted: boolean,
+  stageList: JSX.Element[]
 }
 
-export type { DefaultStatus, InitialState }
+export type {InitialState }
