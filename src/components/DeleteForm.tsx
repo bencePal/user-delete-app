@@ -11,10 +11,7 @@ const DeleteForm = () => {
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const email = event.target.value;
-    setState((prevState) => ({
-      ...prevState,
-      email,
-    }));
+    setState((prevState) => ({ ...prevState, email }));
   };
 
   const handleReset = (): void => {
@@ -24,7 +21,7 @@ const DeleteForm = () => {
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
-    setState((prevState) => ({...prevState, formSubmitted: true}));
+    setState((prevState) => ({ ...prevState, formSubmitted: true }));
   };
 
   const handleAxios = async (url: string, type: string): Promise<any> =>{
