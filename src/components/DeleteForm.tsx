@@ -34,7 +34,7 @@ const DeleteForm = () => {
   }
 
   useEffect(() => {
-    if (firstUpdate.current) {
+    if (firstUpdate.current || !email) {
       firstUpdate.current = false;
       return;
     }
