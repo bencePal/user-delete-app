@@ -1,4 +1,4 @@
-import { InitialStateType } from "../types/initialTypes";
+import { InitialStateType } from "../types/initialStateType";
 
 export const initialState: InitialStateType = {
   email: '',
