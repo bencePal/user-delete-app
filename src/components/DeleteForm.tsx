@@ -1,13 +1,14 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import axios from "axios";
-import initialState from "../states/initial-state";
-import StageItem from "./StageItem";
-import requestData from "../config";
+import { initialState } from "../states/initialState";
+import { StageItem } from "./StageItem";
+import { requestData } from "../config";
+import { handleAxios } from "../utils/axiosHandler";
 
 const DeleteForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [{email, placeholder, numberOfRequests, formSubmitted, progressEnded, stageList}, setState] = useState(initialState);
   const firstUpdate = useRef<boolean>(true);
+  const completeEmail = useRef<string>('');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const email = event.target.value;
@@ -16,45 +17,39 @@ const DeleteForm = () => {
 
   const handleReset = (): void => {
     setState({ ...initialState });
-    firstUpdate.current = true
+    firstUpdate.current = true;
+    completeEmail.current = '';
   };
 
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
+    completeEmail.current = email;
     setState((prevState) => ({ ...prevState, formSubmitted: true }));
   };
 
-  const handleAxios = async (url: string, type: string): Promise<any> =>{
-    setLoading(true);
-    if (type === 'POST') {
-      return await axios.post(url, {email});
-    } else {
-      return await axios.get(url);
-    }
-  }
-
   useEffect(() => {
-    if (firstUpdate.current || !email) {
+    if (firstUpdate.current || !formSubmitted) {
       firstUpdate.current = false;
       return;
     }
     if (numberOfRequests < requestData.length) {
       (async () => {
         try {
-          const response = await handleAxios(requestData[numberOfRequests].url, requestData[numberOfRequests].method);
+          setLoading(true);
+          const response = await handleAxios(requestData[numberOfRequests].url, requestData[numberOfRequests].method, completeEmail.current);
           console.log(response)
           setState((prevState) => ({
             ...prevState,
             numberOfRequests: numberOfRequests + 1,
-            stageList: [...stageList, <StageItem key={numberOfRequests} type={'success'} statusNumber={numberOfRequests} />]
+            stageList: [...prevState.stageList, <StageItem key={numberOfRequests} type={'success'} statusNumber={numberOfRequests} />]
           }));
         } catch (error) {
-          console.log(error)
           setLoading(false);
+          console.log(error)
           setState((prevState) => ({
             ...prevState, 
             progressEnded: true,
-            stageList: [...stageList, <StageItem key={numberOfRequests} type={'danger'} statusNumber={numberOfRequests} />]
+            stageList: [...prevState.stageList, <StageItem key={numberOfRequests} type={'danger'} statusNumber={numberOfRequests} />]
           }));
         }
 

@@ -1,4 +1,4 @@
-const StageItem = ( {type, statusNumber}: any ) => {
+export const StageItem = ( {type, statusNumber}: any ) => {
   return (
     <div className={`stage text-${type} clearfix"`}>
     <span className={'stage__text'}>Stage {statusNumber + 1}</span>
@@ -6,5 +6,3 @@ const StageItem = ( {type, statusNumber}: any ) => {
   </div>
   )
 }
-
-export default StageItem;

@@ -1,6 +1,6 @@
-import { InitialState } from "../types/initial-types";
+import { InitialStateType } from "../types/initialTypes";
 
-const initialState: InitialState = {
+export const initialState: InitialStateType = {
   email: '',
   placeholder: 'Email address',
   numberOfRequests: 0,
@@ -8,5 +8,3 @@ const initialState: InitialState = {
   formSubmitted: false,
   stageList: []
 };
-
-export default initialState;

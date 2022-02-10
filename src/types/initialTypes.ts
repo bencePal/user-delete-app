@@ -1,4 +1,4 @@
-type InitialState = {
+export type InitialStateType = {
   email: string,
   placeholder: string,
   numberOfRequests: number,
@@ -6,5 +6,3 @@ type InitialState = {
   formSubmitted: boolean,
   stageList: JSX.Element[]
 }
-
-export type {InitialState }
